@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>预罐装计算工具</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f4f6;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 18px;
+      box-sizing: border-box;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      margin: 0 6px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #4f46e5;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #4338ca;
+    }
+
+    #result, #policy {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #222;
+      text-align: center;
+    }
+
+    @media (max-width: 420px) {
+      .container {
+        margin: 20px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>疗程计算工具</h2>
+    <label for="inputValue">请输入需要值：</label>
+    <input type="number" id="inputValue" step="0.01" placeholder="例如：4.7">
+
+    <div class="button-group">
+      <button onclick="calculate()">计算</button>
+      <button onclick="clearAll()" style="background-color: #9ca3af;">清空</button>
+    </div>
+
+    <div id="result"></div>
+    <div id="policy"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const discreteValues = [3, 4, 5, 6, 8, 10];
+      let y = parseFloat(document.getElementById("inputValue").value);
+      const resultDiv = document.getElementById("result");
+      const policyDiv = document.getElementById("policy");
+
+      if (isNaN(y) || y < 0) {
+        resultDiv.textContent = "请输入有效的数值";
+        policyDiv.textContent = "";
+        return;
+      }
+
+      let rounded = Math.ceil(y);
+      let t = 0;
+
+      if (rounded > 10) {
+        resultDiv.textContent = "最小预罐装是：错误值";
+        policyDiv.textContent = "";
+        return;
+      }
+
+      for (let val of discreteValues) {
+        if (val >= rounded) {
+          t = val;
+          break;
+        }
+      }
+
+      if (t === y) 
+	  {
+		x = 1;  // 直接策略为打1停1
+		resultDiv.textContent = "最小预罐装是：" + t;
+		policyDiv.textContent = "疗程为正常打";
+	} else {
+		x = y / (t - y);
+		let floorX = Math.floor(x);
+		let ceilX = Math.ceil(x);
+		let errorDown = y * (floorX + 1) - t * floorX;
+		let errorUp = y * (ceilX + 1) - t * ceilX;
+		x = Math.abs(errorDown) < Math.abs(errorUp) ? floorX : ceilX;
+		resultDiv.textContent = "最小预罐装是：" + t;
+		policyDiv.textContent = "疗程为打 " + x + " 停 1";
+	}
+
+      
+    }
+
+    function clearAll() {
+      document.getElementById("inputValue").value = "";
+      document.getElementById("result").textContent = "";
+      document.getElementById("policy").textContent = "";
+    }
+  </script>
+</body>
+</html>
