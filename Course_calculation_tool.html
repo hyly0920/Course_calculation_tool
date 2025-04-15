@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>预罐封计算工具</title>
+  <title>预灌封计算工具</title>
   <style>
     body {
       font-family: "Helvetica Neue", sans-serif;
@@ -111,8 +111,8 @@
       let rounded = Math.ceil(y);
       let t = 0;
 
-      if (rounded > 10 || rounded < 0) {
-        resultDiv.textContent = "最小预罐封是：错误值";
+      if (rounded > 10) {
+        resultDiv.textContent = "最小预灌封是：错误值";
         policyDiv.textContent = "";
         return;
       }
@@ -127,7 +127,7 @@
       if (t === y) 
 	  {
 		x = 1;  // 直接策略为打1停1
-		resultDiv.textContent = "最小预罐封是：" + t;
+		resultDiv.textContent = "最小预灌封是：" + t + " IU";
 		policyDiv.textContent = "疗程为正常";
 	} else {
 		x = y / (t - y);
@@ -136,8 +136,8 @@
 		let errorDown = y * (floorX + 1) - t * floorX;
 		let errorUp = y * (ceilX + 1) - t * ceilX;
 		x = Math.abs(errorDown) < Math.abs(errorUp) ? floorX : ceilX;
-		resultDiv.textContent = "最小预罐封是：" + t;
-		policyDiv.textContent = "疗程为打 " + x + " 停 1";
+		resultDiv.textContent = "最小预灌封是：" + t + " IU";
+		policyDiv.textContent = "疗程为打 " + x + " 天停 1 天";
 	}
 
       
